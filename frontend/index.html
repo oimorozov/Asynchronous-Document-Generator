@@ -6,24 +6,20 @@
     <link rel="stylesheet" href="style.css"> 
 </head>
 <body>
-    <div>
-        <div class="title_text">
-        <h1>Генератор отчетов</h1>
+    <header class="header">
+        Генератор документов
+    </header>
+
+    <main class="main">
+        <div class="processData">
+            <input type="file" id="inputData" hidden>
+            <label for="inputData">Выбрать файл</label>
+            <button id="start_button" hidden></button>
+            <label for="start_button">Конвертировать</label>
         </div>
-        <br>
-        <div class = upload_text>
-            <p>Загрузка файла</p>
-        </div>
-        <br>
-        <input type="file" id="fileInput" class="input_button">
-        <button class="start_button">start</button>
-        <br>
-        <br>
-        <div class="file_data">
-            <h2>Содержимое файла</h2>
-            <pre id="fileOutput"></pre>
-        </div>
-        <script src="script.js"></script>
-    </div>
+        <div id="outputData"></div>
+    </main>
+
+    <script src="script.js"></script>
 </body>
 </html>

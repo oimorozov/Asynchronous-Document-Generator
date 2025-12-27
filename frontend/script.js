@@ -1,10 +1,10 @@
-const fileInput = document.getElementById('fileInput');
-const startButton = document.querySelector('.start_button');
-const fileOutput = document.getElementById('fileOutput');
+const inputData = document.getElementById('inputData');
+const startButton = document.getElementById('start_button');
+const outputData = document.getElementById('outputData');
 
 let chosenFile = null;
 
-fileInput.addEventListener('change', (event) => {
+inputData.addEventListener('change', (event) => {
     chosenFile = event.target.files[0]; 
 });
 
@@ -15,7 +15,7 @@ startButton.addEventListener('click', () => {
         reader.onload = (event) => {
             const fileContent = event.target.result;
             
-            fileOutput.textContent = fileContent;
+            outputData.textContent = fileContent;
         };
         
         reader.readAsText(chosenFile);
