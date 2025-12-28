@@ -1,11 +1,8 @@
 html {
 
 }
-head {
-
-}
 body {
-    background-image: url("background_picture.png");
+    background-image: url("/background_picture.png");
     background-size: cover;
     background-repeat: no-repeat;
 }
