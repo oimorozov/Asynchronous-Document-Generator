@@ -37,6 +37,44 @@ services:
       - "15672:15672"
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
+  gateway:
+    build: ./backend/gateway
+    ports:
+      - "8000:8000"
+    container_name: gateway
+    restart: always
+    depends_on:
+      - db
+      - rabbitmq
+      - minio
+    environment:
+      DATABASE_URL: "postgresql+psycopg2://oim:oim3003@db:5432/postgres_db"
+      RABBITMQ_URL: "amqp://oim:oim3003@rabbitmq:5672/"
+      MINIO_ENDPOINT: "http://minio:9000"
+      MINIO_ACCESS_KEY: "oim"
+      MINIO_SECRET_KEY: "oim30033003"
+  worker:
+      build: ./backend/worker
+      ports:
+        - 8001:8001
+      container_name: worker
+      restart: always
+      depends_on:
+        - db
+        - rabbitmq
+        - minio
+      environment:
+        DATABASE_URL: "postgresql+psycopg2://oim:oim3003@db:5432/postgres_db"
+        RABBITMQ_URL: "amqp://oim:oim3003@rabbitmq:5672/"
+        MINIO_ENDPOINT: "http://minio:9000"
+        MINIO_ACCESS_KEY: "oim"
+        MINIO_SECRET_KEY: "oim30033003"
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    restart: always
+    ports:
+      - "3000:80"
 
 volumes:
   postgres_data:
