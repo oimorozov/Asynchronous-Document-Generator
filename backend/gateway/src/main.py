@@ -4,17 +4,17 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from src.document_router import router
+from src.database import create_tables
 from src.models.input_file import InputFile
 from src.models.output_file import OutputFile
-from src.database import create_tables
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print("🚀 [Startup] Запускаем создание таблиц...")
+    print("Запускаем создание таблиц...")
     await create_tables()
-    print("✅ [Startup] Таблицы проверены/созданы!")
+    print("Таблицы проверены/созданы")
     yield
-    print("🛑 [Shutdown] Сервер останавливается")
+    print("Сервер останавливается")
 
 app = FastAPI(lifespan=lifespan)
 

@@ -48,7 +48,7 @@ services:
       - rabbitmq
       - minio
     environment:
-      DATABASE_URL: "postgresql+psycopg2://oim:oim3003@db:5432/postgres_db"
+      DATABASE_URL: "postgresql+asyncpg://oim:oim3003@db:5432/postgres_db"
       RABBITMQ_URL: "amqp://oim:oim3003@rabbitmq:5672/"
       MINIO_ENDPOINT: "http://minio:9000"
       MINIO_ACCESS_KEY: "oim"
