@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine
+from sqlalchemy.ext.asyncio import create_async_engine
 
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
@@ -11,7 +11,7 @@ class Base(DeclarativeBase):
     pass
 
 # Движок
-engine = create_engine(
+engine = create_async_engine(
     url=settings.DATABASE_URL,
     echo=True
 )
@@ -19,9 +19,10 @@ engine = create_engine(
 # Фабрика сессий
 session_factory = sessionmaker(engine)
 
-def create_tables():
+async def create_tables():
     """
     Функция создания таблиц БД
     """
-    Base.metadata.drop_all(engine)
-    Base.metadata.create_all(engine)
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
+        await conn.run_sync(Base.metadata.create_all)
