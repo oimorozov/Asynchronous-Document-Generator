@@ -24,10 +24,23 @@ async def lifespan(app: FastAPI):
     print("INFO: MinIO инициализирована")
 
     yield
-    
+
     print("INFO: Завершение работы")
 
 app = FastAPI(lifespan=lifespan)
+
+origins = [
+    "http://localhost:8001",
+    "http://localhost:3000"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
 @app.get("/")
 async def root():
