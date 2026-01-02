@@ -1,24 +1,31 @@
-from faststream.rabbit.fastapi import RabbitRouter
+from faststream.rabbit import RabbitBroker
 
-from fastapi import UploadFile
+from fastapi import UploadFile, APIRouter
+from fastapi.responses import StreamingResponse
 
 from src.config import settings
 
-from src.minio import client, BUCKET_INPUT_FILE
+from src.minio import client, BUCKET_INPUT_FILE, BUCKET_OUTPUT_FILE
 
-router = RabbitRouter(settings.RABBITMQ_URL)
+broker = RabbitBroker(settings.RABBITMQ_URL)
+
+router = APIRouter()
 
 async def publish_msg(filename: str):
     """
     Публикует сообщение в RabbitMQ
     """
-    await router.broker.publish(
+    await broker.publish(
         message=f"{filename}",
-        queue="files"
+        queue="input_files"
     )
     return {
         "data": "Success"
     }
+
+@broker.subscriber(queue="file_output")
+async def sub_msg(filename: str):
+    print(f"INFO (gateway): received message. Content: {filename}")
 
 @router.post("/upload")
 async def upload_file_and_publish_msg(file: UploadFile):
@@ -33,3 +40,13 @@ async def upload_file_and_publish_msg(file: UploadFile):
         content_type=file.content_type
     )
     await publish_msg(filename=file.filename)
+    return {"status": "uploaded", "filename": file.filename}
+
+@router.get("/download/{filename}")
+async def get_file_and_publish_msg(filename: str):
+    response = client.get_object(BUCKET_OUTPUT_FILE, filename)
+    return StreamingResponse(
+        response,
+        media_type="application/octet-stream",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'}
+    )

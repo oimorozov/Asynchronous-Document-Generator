@@ -23,8 +23,12 @@ async def lifespan(app: FastAPI):
     create_buckets()
     print("INFO: MinIO инициализирована")
 
+    await message_broker.broker.start()
+
     yield
 
+    await message_broker.broker.stop()
+    
     print("INFO: Завершение работы")
 
 app = FastAPI(lifespan=lifespan)

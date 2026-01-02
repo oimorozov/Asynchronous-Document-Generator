@@ -8,19 +8,21 @@ from src.database import create_tables
 from src.models.input_file import InputFile
 from src.models.output_file import OutputFile
 
-from src.message_broker import broker
+from src import message_broker
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    await broker.start()
+    await message_broker.broker.start()
     yield
-    await broker.stop()
+    await message_broker.broker.stop()
 
 app = FastAPI(lifespan=lifespan)
 
 @app.get("/")
 async def root():
     return {"Hello": "World"}
+
+app.include_router(message_broker.router)
 
 if __name__ == '__main__':
     asyncio.run(app.run())
