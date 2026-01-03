@@ -1,26 +1,12 @@
-const inputData = document.getElementById('inputData');
-const startButton = document.getElementById('start_button');
-const outputData = document.getElementById('outputData');
+const fileInput = document.getElementById('upload-file');
+const btn = document.getElementById('file-upload-btn');
 
-let chosenFile = null;
-
-inputData.addEventListener('change', (event) => {
-    chosenFile = event.target.files[0]; 
-});
-
-startButton.addEventListener('click', () => {
-    if (chosenFile) {
-        const reader = new FileReader();
-
-        reader.onload = (event) => {
-            const fileContent = event.target.result;
-            
-            outputData.textContent = fileContent;
-        };
-        
-        reader.readAsText(chosenFile);
-
-    } else {
-        alert("Пожалуйста, сначала выберите файл!");
+btn.addEventListener('click', async function() {
+    const formData = new FormData();
+    formData.append('file', fileInput.files[0]); 
+        const response = await fetch('http://localhost:8000/', {
+            method: 'POST',
+            body: formData 
+        })
     }
-});
+);

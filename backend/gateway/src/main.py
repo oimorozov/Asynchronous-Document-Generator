@@ -1,7 +1,7 @@
 import asyncio
 
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
 from src import message_broker
@@ -28,7 +28,7 @@ async def lifespan(app: FastAPI):
     yield
 
     await message_broker.broker.stop()
-    
+
     print("INFO: Завершение работы")
 
 app = FastAPI(lifespan=lifespan)
@@ -48,7 +48,7 @@ app.add_middleware(
 
 @app.get("/")
 async def root():
-    return {"Hello": "World"}
+    return "root"
 
 app.include_router(message_broker.router)
 
