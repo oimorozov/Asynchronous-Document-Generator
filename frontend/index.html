@@ -6,20 +6,45 @@
     <link rel="stylesheet" href="style.css"> 
 </head>
 <body>
-    <header class="header">
-        Генератор документов
+    <header>
+
+        <div id="headerTitle">
+            Генератор документов
+        </div>
+
+        <div id="headerSubtitle">
+            <a class="social-btn telegram" href="https://www.google.com">
+                Telegram
+            </a>
+            <a class="social-btn instagram" href="https://www.google.com">
+                Instagram
+            </a>
+            <a class="social-btn email" href="https://www.google.com">
+                E-mail
+            </a>
+        </div>
+
     </header>
 
-    <main class="main">
-        <div class="processData">
-            <input type="file" id="inputData" hidden>
-            <label for="inputData">Выбрать файл</label>
-            <button id="start_button" hidden></button>
-            <label for="start_button">Конвертировать</label>
+    <main>
+        <div class="btns">
+            <input
+            type="file"
+            id="upload-file"
+            name="file"
+            class="file-upload">
+            <label for="upload-file" class="button-upload-file">
+                <span>Загрузить документ</span>
+            </label>
+
+            <button class="file-upload-btn">
+                Сделать pdf
+            </button>
         </div>
-        <div id="outputData"></div>
     </main>
 
-    <script src="script.js"></script>
+    <footer>
+        pet-project
+    </footer>
 </body>
 </html>

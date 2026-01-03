@@ -1,5 +1,117 @@
+html {
+    background: rgb(221, 246, 185);
+}
 body {
-    background-image: url("/background_picture.png");
-    background-size: cover;
-    background-repeat: no-repeat;
+    margin: 0.5em;
+    min-height: 1em;
+    display: flex;
+    flex-direction: column;
+}
+header {
+    display: flex;
+    flex-direction: column;
+    gap: 1px; 
+}
+
+#headerTitle {
+    border: 5px solid black;
+    border-radius: 0.5em;
+    background-color: #4CAF50;
+    text-align: center;
+    font-family: sans-serif;
+    color: white;
+    font-size: 2em;
+    padding: 1em;
+}
+
+#headerSubtitle {
+    border: 5px solid black;
+    border-radius: 0.5em;
+    background-color: #4CAF50;
+    text-align: center;
+    font-family: sans-serif;
+    color: white;
+    font-size: 1em;
+    padding: 1em;
+}
+
+#headerSubtitle > a {
+    display: inline-flex;
+    justify-content: space-between;
+}
+
+.social-btn {
+    display: inline-block;
+    text-decoration: none;
+    padding: 0em 1em;
+    border-radius: 8px;
+    font-family: sans-serif;
+    font-weight: bold;
+    color: white;
+    transition: transform 0.2s;
+}
+.social-btn:hover {
+    transform: scale(1.5);
+    opacity: 0.9;
+}
+
+.btns {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+}
+
+.file-upload {
+    display: none;
+}
+
+.button-upload-file {
+    background-color: #4CAF50;
+    color: white;
+    font-size: 1em;
+    padding: 1em;
+    margin-top: 5em;
+    margin-left: 10em;
+    margin-right: 10em;
+    font-family: sans-serif;
+    border-radius: 0.5em;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.button-upload-file:hover {
+    transform: scale(1.5);
+}
+
+.file-upload-btn {
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 1em;
+    padding: 1em;
+    margin-top: 5em;
+    margin-left: 10em;
+    margin-right: 10em;
+    font-family: sans-serif;
+    border-radius: 0.5em;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.file-upload-btn:hover {
+    transform: scale(1.5);
+}
+
+footer {
+    margin-top: 10em;
+    display: flex; 
+    justify-content: center; 
+    border: 5px solid black;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 0.5em;
+    font-family: sans-serif;
+    font-size: 1em;
+    padding: 1em;
 }
