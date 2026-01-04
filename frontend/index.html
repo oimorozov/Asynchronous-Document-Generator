@@ -2,49 +2,77 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Document Generator</title>
-    <link rel="stylesheet" href="style.css"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Простой и быстрый конвертер CSV файлов в PDF документы.">
+    <meta name="author" content="oim">
+    <link rel="stylesheet" href="style.css">
+    
+    <title>CSV to PDF Converter</title>
 </head>
 <body>
-    <header>
 
-        <div id="headerTitle">
-            Генератор документов
-        </div>
-
-        <div id="headerSubtitle">
-            <a class="social-btn telegram" href="https://www.google.com">
-                Telegram
-            </a>
-            <a class="social-btn instagram" href="https://www.google.com">
-                Instagram
-            </a>
-            <a class="social-btn email" href="https://www.google.com">
-                E-mail
-            </a>
-        </div>
-
+    <!-- Шапка сайта -->
+    <header class="app-header">
+        <h1 class="app-title">CSV to PDF Converter</h1>
     </header>
 
-    <main>
-        <div class="btns">
-            <input
-            type="file"
-            id="upload-file"
-            name="file"
-            class="file-upload">
-            <label for="upload-file" class="button-upload-file">
-                <span>Загрузить документ</span>
-            </label>
+    <!-- Основная область приложения -->
+    <main class="app-main">
+        <section class="converter-card">
+            <h2>Загрузите файл</h2>
+            <p>Выберите .csv файл для конвертации</p>
+            
+            <!-- Форма отправки -->
+            <form id="converter-form" action="/upload" method="POST" enctype="multipart/form-data">
+                
+                <!-- Область Drag & Drop / Клик -->
+                <label for="csv-file" class="dropzone" id="dropzone">
+                    <span id="dropzone-text">Нажмите или перетащите файл сюда</span>
+                    <input 
+                        type="file" 
+                        id="csv-file" 
+                        name="file" 
+                        class="file-input" 
+                        accept=".csv" 
+                        required
+                        style="display: none;"
+                    >
+                </label>
 
-            <button class="file-upload-btn" id="file-upload-btn">
-                Сделать pdf
-            </button>
-        </div>
+                <!-- Место для отображения имени выбранного файла -->
+                <div id="file-name" class="file-info" hidden>Файл не выбран</div>
+
+                <!-- Кнопка конвертации -->
+                <button type="submit" id="convert-btn" class="btn" disabled>
+                    Конвертировать в PDF
+                </button>
+            </form>
+        </section>
     </main>
 
-    <footer>
-        pet-project
+    <!--Нижняя шапка сайта-->
+    <footer class="app-footer">
+        <p>&copy; 2026 Пет-проект "CSV Converter". Все права защищены.</p>
+        
+        <nav aria-label="Социальные сети">
+            <ul class="social-links">
+                <li>
+                    <a href="https://github.com/oimorozov" target="_blank" rel="noopener noreferrer" class="social-link">
+                        GitHub
+                    </a>
+                </li>
+                <li>
+                    <a href="https://t.me/bubaleok" target="_blank" rel="noopener noreferrer" class="social-link">
+                        Telegram
+                    </a>
+                </li>
+                <li>
+                    <a href="mailto:imorozovolejka@google.com" class="social-link">
+                        Email
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </footer>
     <script src="script.js"></script>
 </body>

@@ -37,6 +37,11 @@ services:
       - "15672:15672"
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
   gateway:
     build: ./backend/gateway
     ports:
@@ -44,9 +49,12 @@ services:
     container_name: gateway
     restart: always
     depends_on:
-      - db
-      - rabbitmq
-      - minio
+      rabbitmq:
+        condition: service_healthy
+      db:
+        condition: service_started
+      minio:
+        condition: service_started
     environment:
       DATABASE_URL: "postgresql+asyncpg://oim:oim3003@db:5432/postgres_db"
       RABBITMQ_URL: "amqp://oim:oim3003@rabbitmq:5672/"
@@ -60,9 +68,12 @@ services:
       container_name: worker
       restart: always
       depends_on:
-        - db
-        - rabbitmq
-        - minio
+        rabbitmq:
+          condition: service_healthy
+        db:
+          condition: service_started
+        minio:
+          condition: service_started
       environment:
         DATABASE_URL: "postgresql+psycopg2://oim:oim3003@db:5432/postgres_db"
         RABBITMQ_URL: "amqp://oim:oim3003@rabbitmq:5672/"
