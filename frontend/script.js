@@ -22,7 +22,7 @@ const handleFile = (file) => {
 // Действие Drag&Drop
 dropzone.addEventListener('drop', (event) => {
     event.preventDefault();
-    console.log('Dropped!');
+    console.log('Dropped');
     const droppedFiles = event.dataTransfer.files;
         
     if (droppedFiles.length > 0) {
@@ -48,8 +48,20 @@ form.addEventListener('submit', async (event) => {
     submitBtn.innerText = "Converting...";
     submitBtn.disabled = true;
     const formData = new FormData(form);
+
     const response = await fetch('http://localhost:8000/upload', {
         method: 'POST',
         body: formData
     });
+
+    const json_response = await response.json();
+
+    if (response.ok) {
+        alert(`Success: ${json_response.message}`);
+    } else {
+        alert(`Error: ${json_response.message}`);
+    }
+    submitBtn.innerText = "Convert to PDF";
+    submitBtn.disabled = false;
+    submitBtn.style.opacity = "1";
 });
