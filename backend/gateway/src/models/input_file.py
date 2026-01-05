@@ -2,7 +2,7 @@ from sqlalchemy.orm import (
     Mapped, mapped_column
 )
 
-from src.database import Base
+from src.db.database import Base
 
 class InputFile(Base):
     __tablename__ = "input_files"

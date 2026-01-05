@@ -1,6 +1,6 @@
-from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 
-from sqlalchemy.orm import DeclarativeBase, sessionmaker
+from sqlalchemy.orm import DeclarativeBase
 
 from src.config import settings
 
@@ -17,7 +17,7 @@ engine = create_async_engine(
 )
 
 # Фабрика сессий
-session_factory = sessionmaker(engine)
+session_factory = async_sessionmaker(engine)
 
 async def create_tables():
     """
