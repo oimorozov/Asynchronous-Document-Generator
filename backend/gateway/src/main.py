@@ -4,11 +4,12 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from src import routes, message_broker
+from src.api.v1.routes import router
+from src.core.rabbitmq import message_broker
 
-from src.minio import create_buckets
+from src.core.minio.minio import create_buckets
 
-from src.db.database import create_tables
+from src.core.database import create_tables
 from src.models.input_file import InputFile
 from src.models.output_file import OutputFile
 
@@ -34,7 +35,6 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 origins = [
-    "http://localhost:8001",
     "http://localhost:3000"
 ]
 
@@ -46,13 +46,7 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-@app.get("/")
-async def root():
-    return {
-        "message": "root"
-    }
-
-app.include_router(routes.router)
+app.include_router(router.router)
 
 if __name__ == '__main__':
     asyncio.run(app.run())

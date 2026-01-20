@@ -18,6 +18,27 @@ const handleFile = (file) => {
             alert('Please select a valid .csv file');
         }
 };
+async function pollForFile(filename) {
+    const response = await fetch(`http://localhost:8000/status/${filename}`); 
+    const data = await response.json();
+
+    if (data.status === 'uploaded') {
+        submitBtn.innerText = "Downloaded!";
+        const file_url = `http://localhost:8000/download/${data.filename}`
+        downloadFile(file_url); 
+    } else {
+        setTimeout(() => pollForFile(filename), 2000);
+    }
+}
+
+async function downloadFile(url) {
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = '';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
 
 // Действие Drag&Drop
 dropzone.addEventListener('drop', (event) => {
@@ -30,6 +51,8 @@ dropzone.addEventListener('drop', (event) => {
         handleFile(droppedFiles[0]);
     }
 });
+
+
 
 // Действие вручную выбрать файл
 fileInput.addEventListener('change', (event) => {
@@ -45,8 +68,7 @@ fileInput.addEventListener('change', (event) => {
 // Действие POST запроса на бэк
 form.addEventListener('submit', async (event) => {
     event.preventDefault();
-    submitBtn.innerText = "Converting...";
-    submitBtn.disabled = true;
+
     const formData = new FormData(form);
 
     const response = await fetch('http://localhost:8000/upload', {
@@ -56,12 +78,16 @@ form.addEventListener('submit', async (event) => {
 
     const json_response = await response.json();
 
+    console.log(`status=${json_response.status}`);
+    console.log(`filename=${json_response.filename}`);
     if (response.ok) {
-        alert(`Success: ${json_response.message}`);
+        submitBtn.innerText = "Converting...";
+        submitBtn.disabled = true;
+        pollForFile(json_response.filename)
     } else {
         alert(`Error: ${json_response.message}`);
+        submitBtn.innerText = "Конвертировать в PDF";
+        submitBtn.disabled = true;
     }
-    submitBtn.innerText = "Convert to PDF";
     submitBtn.disabled = false;
-    submitBtn.style.opacity = "1";
 });

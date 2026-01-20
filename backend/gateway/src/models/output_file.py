@@ -3,7 +3,7 @@ from sqlalchemy.orm import (
     Mapped, mapped_column
 )
 
-from src.db.database import Base
+from src.models.base import Base
 
 class OutputFile(Base):
     __tablename__ = "output_files"

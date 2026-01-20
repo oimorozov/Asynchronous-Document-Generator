@@ -1,14 +1,8 @@
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 
-from sqlalchemy.orm import DeclarativeBase
+from src.core.config import settings
 
-from src.config import settings
-
-class Base(DeclarativeBase):
-    """
-    Интерфейс для моделей БД
-    """
-    pass
+from src.models.base import Base
 
 # Движок
 engine = create_async_engine(

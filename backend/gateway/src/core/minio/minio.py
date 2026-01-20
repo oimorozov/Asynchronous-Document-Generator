@@ -1,6 +1,6 @@
 from minio.api import Minio
 
-from src.config import settings
+from core.config import settings
 
 client = Minio(
     endpoint=settings.MINIO_ENDPOINT,
