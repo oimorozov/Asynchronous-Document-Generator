@@ -10,8 +10,8 @@ from src.core.rabbitmq import message_broker
 from src.core.minio.minio import create_buckets
 
 from src.core.database import create_tables
-from src.models.input_file import InputFile
-from src.models.output_file import OutputFile
+from src.models.InputFileModel import InputFile
+from src.models.OutputFileModel import OutputFile
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
