@@ -4,14 +4,10 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from src.api.v1.routes import router
-from src.core.rabbitmq import message_broker
-
-from src.core.minio.minio import create_buckets
-
+from src.api.v1 import router
+from src.core import message_broker
+from src.core.minio import create_buckets
 from src.core.database import create_tables
-from src.models.InputFileModel import InputFile
-from src.models.OutputFileModel import OutputFile
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

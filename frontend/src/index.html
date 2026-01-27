@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Простой и быстрый конвертер CSV файлов в PDF документы.">
     <meta name="author" content="oim">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles/style.css">
     
     <title>CSV to PDF Converter</title>
 </head>
@@ -33,7 +33,7 @@
                         id="csv-file" 
                         name="file" 
                         class="file-input" 
-                        accept=".csv" 
+                        accept="*/*" 
                         required
                         style="display: none;"
                     >
@@ -46,6 +46,11 @@
                 <button type="submit" id="convert-btn" class="btn" disabled>
                     Конвертировать в PDF
                 </button>
+
+                <div id="status-block" class="file-info" hidden>
+                    <div id="status-text">Статус: ожидание</div>
+                    <a id="download-link" class="btn" href="#" hidden>Скачать результат</a>
+                </div>
             </form>
         </section>
     </main>

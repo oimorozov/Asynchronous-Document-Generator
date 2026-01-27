@@ -1,93 +1,107 @@
+const API_BASE = "http://localhost:8000/api/v1";
+
 const dropzone = document.getElementById('dropzone');
 const fileInput = document.getElementById('csv-file');
 const fileNameDiv = document.getElementById('file-name');
 const submitBtn = document.getElementById('convert-btn');
 const form = document.getElementById('converter-form');
+const statusBlock = document.getElementById('status-block');
+const statusText = document.getElementById('status-text');
+const downloadLink = document.getElementById('download-link');
 
-// Отключаем дефолт 
 dropzone.addEventListener('dragover', (event) => {
-    event.preventDefault(); 
+    event.preventDefault();
 });
 
 const handleFile = (file) => {
-    if (file && file.name.endsWith('.csv')) {
-        fileNameDiv.textContent = `Selected: ${file.name}`;
-        fileNameDiv.hidden = false;        
+    if (file) {
+        fileNameDiv.textContent = `Выбран файл: ${file.name}`;
+        fileNameDiv.hidden = false;
         submitBtn.disabled = false;
-        } else {
-            alert('Please select a valid .csv file');
-        }
-};
-async function pollForFile(filename) {
-    const response = await fetch(`http://localhost:8000/status/${filename}`); 
-    const data = await response.json();
-
-    if (data.status === 'uploaded') {
-        submitBtn.innerText = "Downloaded!";
-        const file_url = `http://localhost:8000/download/${data.filename}`
-        downloadFile(file_url); 
-    } else {
-        setTimeout(() => pollForFile(filename), 2000);
+        return;
     }
-}
+    alert('Пожалуйста, выберите файл');
+};
 
-async function downloadFile(url) {
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = '';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-}
+const updateStatus = (text) => {
+    statusBlock.hidden = false;
+    statusText.textContent = text;
+};
 
-// Действие Drag&Drop
+const resetDownload = () => {
+    downloadLink.hidden = true;
+    downloadLink.href = "#";
+};
+
+const pollStatus = async (id) => {
+    const response = await fetch(`${API_BASE}/status/${id}`);
+    if (!response.ok) {
+        throw new Error("status request failed");
+    }
+    return await response.json();
+};
+
 dropzone.addEventListener('drop', (event) => {
     event.preventDefault();
-    console.log('Dropped');
     const droppedFiles = event.dataTransfer.files;
-        
     if (droppedFiles.length > 0) {
         fileInput.files = droppedFiles;
         handleFile(droppedFiles[0]);
     }
 });
 
-
-
-// Действие вручную выбрать файл
 fileInput.addEventListener('change', (event) => {
-    console.log("Changed");
-
     const selectedFiles = event.target.files;
-        
     if (selectedFiles.length > 0) {
         handleFile(selectedFiles[0]);
     }
 });
 
-// Действие POST запроса на бэк
 form.addEventListener('submit', async (event) => {
     event.preventDefault();
+    resetDownload();
+    updateStatus("Загрузка файла...");
 
     const formData = new FormData(form);
-
-    const response = await fetch('http://localhost:8000/upload', {
+    const response = await fetch(`${API_BASE}/upload`, {
         method: 'POST',
         body: formData
     });
 
-    const json_response = await response.json();
-
-    console.log(`status=${json_response.status}`);
-    console.log(`filename=${json_response.filename}`);
-    if (response.ok) {
-        submitBtn.innerText = "Converting...";
-        submitBtn.disabled = true;
-        pollForFile(json_response.filename)
-    } else {
-        alert(`Error: ${json_response.message}`);
-        submitBtn.innerText = "Конвертировать в PDF";
-        submitBtn.disabled = true;
+    if (!response.ok) {
+        updateStatus("Ошибка загрузки");
+        return;
     }
-    submitBtn.disabled = false;
+
+    const jsonResponse = await response.json();
+    const taskId = jsonResponse.id;
+
+    submitBtn.innerText = "Обработка...";
+    submitBtn.disabled = true;
+    updateStatus(`В очереди. Задача #${taskId}`);
+
+    const pollInterval = setInterval(async () => {
+        try {
+            const data = await pollStatus(taskId);
+            updateStatus(`Статус: ${data.status}`);
+
+            if (data.status === "COMPLETED") {
+                clearInterval(pollInterval);
+                downloadLink.href = data.download_url;
+                downloadLink.textContent = `Скачать результат (${data.filename})`;
+                downloadLink.hidden = false;
+                submitBtn.innerText = "Готово";
+            } else if (data.status === "FAILED") {
+                clearInterval(pollInterval);
+                updateStatus("Ошибка обработки");
+                submitBtn.innerText = "Конвертировать в PDF";
+                submitBtn.disabled = false;
+            }
+        } catch (e) {
+            clearInterval(pollInterval);
+            updateStatus("Ошибка статуса");
+            submitBtn.innerText = "Конвертировать в PDF";
+            submitBtn.disabled = false;
+        }
+    }, 2000);
 });
